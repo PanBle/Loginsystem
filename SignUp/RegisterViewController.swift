@@ -8,17 +8,48 @@
 
 import UIKit
 
-class RegisterViewController: UIViewController {
+class RegisterViewController: UIViewController ,UIImagePickerControllerDelegate, UINavigationControllerDelegate{
 
+    @IBOutlet weak var reIDField: UITextField!
+    @IBOutlet weak var rePWField: UITextField!
+    @IBOutlet weak var rePWretField: UITextField!
+    @IBOutlet weak var emailField: UITextField!
+    @IBOutlet weak var profile: UIImageView!
+    
+    let url = "http://207.148.88.110:3000"
+    let picker = UIImagePickerController()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+    }
+    
+    @IBAction func registerButton(_ sender: Any) {
+        //URL setting
+        let regURL:URL = URL(string: url + "/ios_register")!
+        //HTTP header
+        let header = ["Content-Type": "multipart/form-data","Accept":"multipart/form-data"]
+        //data --> json
+        let param = ["data":["id":reIDField.text,"pw":rePWField.text,"name":,"phone":,"email":]]
+        
+        
+    }
+    
+    @IBAction func returnLoginButton(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage{
+            profile.image = image
+            print(info)
+        }
+        dismiss(animated: true, completion: nil)
     }
     
 
