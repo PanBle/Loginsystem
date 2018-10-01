@@ -43,11 +43,11 @@ class RegisterViewController: UIViewController ,UIImagePickerControllerDelegate,
         let alert = UIAlertController(title: "앨범", message: "사진을 선택해 주세요", preferredStyle: .actionSheet)
         
         let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()}
-        //        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in self.openCamera()}
+        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in self.openCamera()}
         let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         
         alert.addAction(library)
-        //        alert.addAction(camera)
+        alert.addAction(camera)
         alert.addAction(cancel)
         
         self.present(alert, animated: true, completion: nil)
@@ -55,7 +55,7 @@ class RegisterViewController: UIViewController ,UIImagePickerControllerDelegate,
     
     @IBAction func registerButton(_ sender: Any) {
         //URL setting
-        let regURL:URL = URL(string: url + "/ios_register")!
+        let regURL:URL = URL(string: url + "/register")!
         //HTTP header
         let header = ["Content-Type": "multipart/form-data","Accept":"multipart/form-data"]
         //data --> json
@@ -79,7 +79,7 @@ class RegisterViewController: UIViewController ,UIImagePickerControllerDelegate,
             self.view.makeToast("Please write down Email")
             return
         }
-        let param = ["data":["id":reIDField.text,"pw":rePWField.text,"name":nameField.text,"phone":rePHField.text,"email":emailField.text]]
+        let param = ["data":"\"id\":\(reIDField.text),\"pw\":\(rePWField.text),\"name\":\(nameField.text),\"phone\":\(rePHField.text),\"email\":\(emailField.text)"]
         
         let imageData = UIImageJPEGRepresentation(self.profile.image!, 1.0)
         Alamofire.upload(multipartFormData: {MultipartFormData in
@@ -97,6 +97,7 @@ class RegisterViewController: UIViewController ,UIImagePickerControllerDelegate,
                         self.dismiss(animated: true, completion: nil)
                     }
                     else{
+                        print("\(json["result"]["message"].string!)")
                         self.view.makeToast("\(json["result"]["message"].string!)")
                     }
                 })
@@ -120,6 +121,11 @@ class RegisterViewController: UIViewController ,UIImagePickerControllerDelegate,
     }
     func openLibrary() {
         picker.sourceType = .photoLibrary
+        
+        self.present(picker, animated: false, completion: nil)
+    }
+    func openCamera() {
+        picker.sourceType = .camera
         
         self.present(picker, animated: false, completion: nil)
     }
